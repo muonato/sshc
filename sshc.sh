@@ -40,4 +40,5 @@ if [[ -f "$1" ]]; then
 else
     HOST=$1
     echo "" | send_command ;
+    echo -e "\nCommand string sent to host '$HOST'\n"
 fi
