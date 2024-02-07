@@ -25,20 +25,17 @@
 : ${1?"ERROR: missing hostname or filename"}
 : ${2?"ERROR: missing command string to execute"}
 
-function send_command() {
-    echo -e "\n$HOST\n=============="
-    ssh $HOST $CMD
-}
-
 CMD=$2
 
 # Test for hostname file
 if [[ -f "$1" ]]; then
-   while read HOST ; do
-        echo "" | send_command ;
+    while read HOST ; do
+        echo -e "\n$HOST\n=============="
+        echo "" | ssh $HOST $CMD ;
     done < $1
+    echo -e "\nCommand string sent to hosts in '$1'\n"
 else
     HOST=$1
-    echo "" | send_command ;
+    echo "" | ssh $HOST $CMD ;
     echo -e "\nCommand string sent to host '$HOST'\n"
 fi
