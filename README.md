@@ -4,7 +4,6 @@ Simple helper to send command to host(s) over ssh
 ## Usage
 ```
 sshc.sh [-r] </path/to/hostsfile>|<hostname> <command>
-
 ```
 
 ## Examples
