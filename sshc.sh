@@ -23,7 +23,7 @@
 #       NOTICE: Verify the command to execute carefully !
 #
 : ${1?"ERROR: missing hostname or filename"}
-: ${2?"ERROR: missing command to send over ssh"}
+: ${2?"ERROR: missing command string to execute"}
 
 function send_command() {
     echo -e "\n$HOST\n=============="
