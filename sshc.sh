@@ -7,7 +7,7 @@
 # with labels in brackets.
 #
 # Usage:
-#       bash sshc.sh <host | hostsfile> <command> [group]
+#       sshc.sh <host | hostsfile> <command> [group]
 #
 # Parameters:
 #       1: Hostname or path to file (required)
