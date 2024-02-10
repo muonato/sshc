@@ -1,5 +1,5 @@
 # sshc
-Simple helper to send commandline to host(s) over ssh, assumes login with ssh-agent (or without password).
+Simple helper to send ssh command to host(s), assumes login with ssh-agent (or without password).
 
 Hosts may be listed one-per-row in a file with group labels in brackets. All hosts in a file will be parsed when a group label is not specified.
 
