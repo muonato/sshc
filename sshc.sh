@@ -1,41 +1,74 @@
 #!/bin/bash
-# muonato/sshc.sh @ GitHub 07-FEB-2024
+# muonato/sshc @ GitHub 10-FEB-2024
 #
-# Simple helper to send command to host(s) over ssh,
-# assumes login with ssh-agent (or without password)
+# Simple helper to send commandline to host(s) over ssh,
+# assumes login with ssh-agent (or without password).
+# Hosts may be listed one-per-row in a file with group
+# labels in brackets. All hosts in a file will be parsed
+# when a group label is not specified.
 #
 # Usage:
-#       bash sshc.sh <hostsfile>|<hostname> <command>
+#       bash sshc.sh <host | hostsfile> <command> [group]
 #
 # Parameters:
-#       1: Hostname or path to filename
-#       2: Command to send over ssh
+#       1: Hostname or path to file (required)
+#       2: Command to send over ssh (required)
+#       3: Group label in hostsfile (optional)
 #
 # Examples:
-#       $ bash sshc.sh hosts.txt "uptime"
-#       = query uptime of hosts listed in file
 #
-#       $ bash lssw.sh server.domain.net "cat /etc/os-release"
-#       = view OS release of specified hostname
+#       1. Hosts file may be grouped with brackets
+#           $ cat hosts.txt
+#           [webhost]
+#           frontend.mydomain.net
+#           webfront.yoursite.com
 #
-#       The 'hostsfile' should have one hostname per row
+#           [foobar]
+#           foobar-1.mydomain.net
+#           foobar-2.mydomain.net
 #
-#       NOTICE: Verify the command to execute carefully !
+#       2. Check uptime of a specific host
+#           $ ./sshc.sh myhost.mydomain.net "uptime"
+#
+#       3. Check version of Apache in hostfile group 'webhost'
+#           $ ./sshc.sh hosts.txt "httpd -v" webhost
+#
+#       4. Verify exclude statement in configuration file
+#           $ ./sshc.sh hosts.txt "cat /etc/yum.conf | grep exclude"
+#
+#       5. Check version of Apache installed in Docker container
+#           $ ./sshc.sh hosts.txt "sudo docker exec my-container httpd -v"
 #
 : ${1?"ERROR: missing hostname or filename"}
 : ${2?"ERROR: missing command string to execute"}
 
-CMD=$2
+# Args
+HOSTS=$1
+COMND=$2
+LABEL=$3
 
-# Test for hostname file
-if [[ -f "$1" ]]; then
-    while read HOST ; do
-        echo -e "\n$HOST\n=============="
-        echo "" | ssh $HOST $CMD ;
-    done < $1
-    echo -e "\nCommand string sent to hosts in '$1'\n"
+# ignore groups if empty
+if [[ -z $LABEL ]]; then
+    GROUP="TRUE"
+fi
+
+# Loop hosts if file exists
+if [[ -f "$HOSTS" ]]; then
+    while read ENTRY; do
+        BLOCK=$(echo $ENTRY|grep -e '^\[.*\]')
+        if [[ $BLOCK ]]; then
+            if [ "[$LABEL]" == $ENTRY ]; then
+                GROUP="TRUE"
+                ENTRY=""
+            else
+                GROUP=""
+            fi
+        fi
+        if [[ $GROUP && $ENTRY ]]; then
+            echo -e "\n[$ENTRY]\n"
+            echo "" | ssh $ENTRY $COMND;
+        fi
+    done < $HOSTS
 else
-    HOST=$1
-    echo "" | ssh $HOST $CMD ;
-    echo -e "\nCommand string sent to host '$HOST'\n"
+    echo "" | ssh $HOSTS $COMND;
 fi
