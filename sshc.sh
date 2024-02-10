@@ -5,7 +5,7 @@
 # assumes login with ssh-agent (or without password).
 # Hosts may be listed one-per-row in a file with group
 # labels in brackets. All hosts in a file will be parsed
-# when a group label is not specified.
+# when a group label is not specified as parameter.
 #
 # Usage:
 #       bash sshc.sh <host | hostsfile> <command> [group]
@@ -16,7 +16,6 @@
 #       3: Group label in hostsfile (optional)
 #
 # Examples:
-#
 #       1. Hosts file may be grouped with brackets
 #           $ cat hosts.txt
 #           [webhost]
@@ -47,17 +46,12 @@ HOSTS=$1
 COMND=$2
 LABEL=$3
 
-# ignore groups if empty
-if [[ -z $LABEL ]]; then
-    GROUP="TRUE"
-fi
-
-# Loop hosts if file exists
 if [[ -f "$HOSTS" ]]; then
     while read ENTRY; do
         BLOCK=$(echo $ENTRY|grep -e '^\[.*\]')
         if [[ $BLOCK ]]; then
-            if [ "[$LABEL]" == $ENTRY ]; then
+            MATCH=$(echo "$ENTRY"|grep "$LABEL")
+            if [[ $MATCH ]]; then
                 GROUP="TRUE"
                 ENTRY=""
             else
@@ -65,7 +59,7 @@ if [[ -f "$HOSTS" ]]; then
             fi
         fi
         if [[ $GROUP && $ENTRY ]]; then
-            echo -e "\n[$ENTRY]\n"
+            echo -e "\n[\033[1;36m$ENTRY\033[0m]"
             echo "" | ssh $ENTRY $COMND;
         fi
     done < $HOSTS
