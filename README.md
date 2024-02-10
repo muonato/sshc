@@ -1,22 +1,35 @@
 # sshc
-Simple helper to send command to host(s) over ssh
+Simple helper to send commandline to host(s) over ssh, assumes login with ssh-agent (or without password). Hosts may be listed one-per-row in a file with group labels in brackets. All hosts in a file will be parsed when a group label is not specified.
 
 ## Usage
 ```
-sshc.sh </path/to/hostsfile>|<hostname> <command>
+sshc.sh <hostname | hostsfile> <command> [group]
 ```
 
 ## Examples
+Hosts file may be grouped with brackets
+
+```
+$ cat hosts.txt
+[webhost]
+frontend.mydomain.net
+webfront.yoursite.com
+
+[foobar]
+foobar-1.mydomain.net
+foobar-2.mydomain.net
+```
+
 Query uptime of specific host
 
 ```
 $ sshc.sh myhost.mydomain.net "uptime"
 ```
 
-Verify exclude statement in configuration file
+Verify exclude in configuration file for hosts group 'webhost'
 
 ```
-$ sshc.sh hosts.txt "cat /etc/yum.conf|grep exclude"
+$ sshc.sh hosts.txt "cat /etc/yum.conf|grep exclude" webhost
 ```
 
 Check version of Apache installed in Docker container
@@ -24,15 +37,6 @@ Check version of Apache installed in Docker container
 ```
 $ sshc.sh hosts.txt "sudo docker exec my-container httpd -v"
 
-```
-
-Hosts file lists one host per line
-
-```
-$ cat hosts.txt
-foobar-1.mydomain.net
-foobar-2.mydomain.net
-snafu.somedomain.com
 ```
 
 ## Platform
