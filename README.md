@@ -37,7 +37,7 @@ Verify exclude in configuration file for hostsfile group 'webhost'
 $ sshc.sh hosts.txt "cat /etc/yum.conf|grep exclude" "webhost"
 ```
 
-Show version of Apache in Docker container of hostsfile group 'webhost'
+Show version of Apache in Docker container for hostsfile group 'webhost'
 
 ```
 $ sshc.sh hosts.txt "sudo docker exec httpd-container httpd -v" "webhost"
