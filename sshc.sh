@@ -1,20 +1,22 @@
 #!/bin/bash
-# muonato/sshc @ GitHub 10-FEB-2024
+# muonato/sshc @ GitHub 11-FEB-2024
 #
-# Simple helper to ssh commandline to hosts, assumes 
+# Simple helper to send ssh command to hosts, assumes 
 # login with ssh-agent (or without password).
-# Hosts may be listed one-per-row in a file and grouped
-# with labels in brackets.
+# Hosts may be grouped with labels in brackets and listed
+# one-per-row in a hostsfile.
 #
 # Usage:
-#       sshc.sh <host | hostsfile> <command> [group]
+#       bash sshc.sh <host | hostsfile> <command> [group]
 #
 # Parameters:
-#       1: Hostname or path to file (required)
-#       2: Command to send over ssh (required)
-#       3: Group label in hostsfile (optional)
+#       1:  Hostname or path to file (required)
+#       2:  Command to send over ssh (required)
+#           Use "check" to list hosts in hostsfile
+#       3:  Group label in hostsfile (optional)
 #
 # Examples:
+#
 #       1. Hosts file may be grouped with brackets
 #           $ cat hosts.txt
 #           [webhost]
@@ -28,14 +30,11 @@
 #       2. Check uptime of a specific host
 #           $ ./sshc.sh myhost.mydomain.net "uptime"
 #
-#       3. Check version of Apache in hostfile group 'webhost'
-#           $ ./sshc.sh hosts.txt "httpd -v" webhost
+#       3. List hosts in the hostsfile group 'webhost'
+#           $ ./sshc.sh hosts.txt "check" "webhost"
 #
-#       4. Verify exclude statement in configuration file
-#           $ ./sshc.sh hosts.txt "cat /etc/yum.conf | grep exclude"
-#
-#       5. Check version of Apache installed in Docker container
-#           $ ./sshc.sh hosts.txt "sudo docker exec my-container httpd -v"
+#       4. Show version of Apache in Docker container of hostsfile group 'webhost'
+#           $ ./sshc.sh hosts.txt "sudo docker exec my-container httpd -v" "webhost"
 #
 : ${1?"ERROR: missing hostname or filename"}
 : ${2?"ERROR: missing command string to execute"}
@@ -58,8 +57,12 @@ if [[ -f "$HOSTS" ]]; then
             fi
         fi
         if [[ $GROUP && $ENTRY ]]; then
-            echo -e "\n[\033[1;36m$ENTRY\033[0m]"
-            echo "" | ssh $ENTRY $COMND;
+            if [[ $COMND == "check" ]]; then
+                echo -e "\033[1;36m$ENTRY\033[0m"
+            else
+                echo -e "\n[\033[1;36m$ENTRY\033[0m]"
+                echo "" | ssh $ENTRY $COMND;
+            fi
         fi
     done < $HOSTS
 else
