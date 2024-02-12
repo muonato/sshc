@@ -23,7 +23,7 @@ webfront.yoursite.com
 foobar-1.mydomain.net
 foobar-2.mydomain.net
 ```
-Query uptime of specific host
+Query uptime of a specific host
 
 ```
 $ ./sshc.sh myhost.mydomain.net "uptime"
