@@ -27,10 +27,12 @@ Query uptime of specific host
 ```
 $ ./sshc.sh myhost.mydomain.net "uptime"
 ```
-List hosts in the hostfile group 'webhost'
+List hosts in the hostfile group 'foobar'
 
 ```
-$ ./sshc.sh host.txt "check" "webhost"
+$ ./sshc.sh host.txt "check" "foobar"
+foobar-1.mydomain.net
+foobar-2.mydomain.net
 ```
 Verify exclude in configuration file for hostsfile group 'webhost'
 
