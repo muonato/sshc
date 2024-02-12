@@ -1,8 +1,9 @@
 # sshc
 Simple helper to send ssh command to hosts, assumes login with ssh-agent (or without password).
 
-Hosts may be grouped with labels in brackets and listed one-per-row in a hostsfile. All hosts will be parsed when a group label is not specified. Comment rows # are ignored.
-Command keyword 'check' lists the affected hosts in hostsfile.
+* Hosts may be grouped with labels in brackets and listed one-per-row in a hostsfile.
+* All hosts will be parsed when a group label is not specified. Comment rows # are ignored.
+* Command keyword 'check' lists the affected hosts in hostsfile.
 
 ## Usage
 ```
