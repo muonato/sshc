@@ -7,12 +7,12 @@
 # one-per-row in a hostsfile. Comment rows # are ignored.
 #
 # Usage:
-#       bash sshc.sh <host | hostsfile> <command> <group>
+#       bash sshc.sh <host | hostsfile> <command> [group]
 #
 # Parameters:
 #       1:  Hostname or path to file (required)
 #       2:  Command to send over ssh (required)
-#           Use "check" to list hosts in hostsfile
+#           Use "check" to list affected hosts
 #       3:  Group label in hostsfile (optional)
 #
 # Examples:
