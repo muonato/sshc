@@ -1,5 +1,5 @@
 #!/bin/bash
-# muonato/sshc @ GitHub 12-FEB-2024
+# muonato/sshc @ GitHub 27-FEB-2024
 #
 # Simple helper to send commandline to host(s) over ssh,
 # assumes login with ssh-agent (or without password).
@@ -39,8 +39,14 @@
 #       5. Show version of Apache in Docker container
 #           $ ./sshc.sh hosts.txt "sudo docker exec my-container httpd -v"
 #
-: ${1?"ERROR: missing hostname or filename"}
-: ${2?"ERROR: missing command string to execute"}
+#       6. Parameters may be written to a separate file
+#           $ cat parameters.txt
+#           hosts.txt "httpd -v" "webhost"
+#           hosts.txt "uptime" "foobar"
+#
+#       7. Read parameters from a separate file
+#           $ xargs -L 1 ./sshc.sh < parameters.txt
+#
 
 # Args
 HOSTS=$1
@@ -75,5 +81,8 @@ if [[ -f "$HOSTS" ]]; then
                 fi
         done < $HOSTS
 else
+    EMPTY=$(echo $HOSTS|grep -v '^#')
+    if [[ -n $EMPTY ]]; then
         echo "" | ssh $HOSTS $COMND;
+    fi
 fi
