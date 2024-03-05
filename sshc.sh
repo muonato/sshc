@@ -1,5 +1,5 @@
 #!/bin/bash
-# muonato/sshc @ GitHub 27-FEB-2024
+# muonato/sshc @ GitHub 05-MAR-2024
 #
 # Simple helper to send commandline to host(s) over ssh,
 # assumes login with ssh-agent (or without password).
@@ -55,6 +55,9 @@ LABEL=$3
 
 if [[ -f "$HOSTS" ]]; then
         while read ENTRY; do
+                # remove CRLF
+                ENTRY=$(echo $ENTRY|tr -d "\r")
+                
                 # skip comment rows
                 ENTRY=$(echo $ENTRY|grep -v '^#')
 
