@@ -1,5 +1,5 @@
 # sshc
-Simple helper to send ssh command to hosts, assumes login with ssh-agent (or without password).
+Simple helper to send ssh command to hosts, assumes login with ssh-agent (your public SSH key in authorized_keys file).
 
 * Hosts may be grouped with labels in brackets and listed one-per-row in a hostsfile.
 * All hosts will be parsed when a group label is not specified. Comment rows # are ignored.
