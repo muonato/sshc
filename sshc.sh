@@ -2,7 +2,7 @@
 # muonato/sshc @ GitHub 05-MAR-2024
 #
 # Simple helper to send commandline to host(s) over ssh,
-# assumes login with ssh-agent (or without password).
+# assuming your public SSH key in authorized_keys file.
 # Hosts may be grouped with labels in brackets and listed
 # one-per-row in a hostsfile. Comment rows # are ignored.
 #
