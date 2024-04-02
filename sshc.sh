@@ -2,7 +2,7 @@
 # muonato/sshc @ GitHub 02-APR-2024
 #
 # Simple helper to send commandline to host(s) over ssh,
-# assuming your public SSH key in authorized_keys file.
+# assuming your public SSH key is in authorized_keys file.
 # Hosts may be grouped with labels in brackets and listed
 # one-per-row in a hostsfile. Comment rows # are ignored.
 #
@@ -83,8 +83,11 @@ if [[ -f "$HOSTS" ]]; then
                         fi
                 fi
         done < $HOSTS
+fi
+
+if [[ -z $HOSTS || -z $COMND ]]; then
+    head -n 50 $0
+    echo "ERROR: missing parameters"
 else
-    if [[ -n $COMND ]]; then
-        echo "" | ssh $HOSTS $COMND;
-    fi
+    echo "" | ssh $HOSTS $COMND;
 fi
