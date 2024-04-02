@@ -30,18 +30,18 @@
 #       2. Check uptime of a specific host
 #           $ ./sshc.sh myhost.mydomain.net "uptime"
 #
-#       3. List hosts in the hostsfile group 'webhost'
+#       3. Check failed systemd services for all listed in hostfile
+#           $ ./sshc.sh hosts.txt "sudo systemctl --failed"
+#
+#       4. List hosts in the hostsfile group 'webhost'
 #           $ ./sshc.sh hosts.txt "check" "webhost"
 #
-#       4. Show version of Apache in hostfile group 'webhost'
-#           $ ./sshc.sh hosts.txt "httpd -v" webhost
-#
-#       5. Show version of Apache in Docker container
-#           $ ./sshc.sh hosts.txt "sudo docker exec my-container httpd -v"
+#       5. Show version of Apache in Docker container for group 'webhost'
+#           $ ./sshc.sh hosts.txt "sudo docker exec my-container httpd -v" "webhost"
 #
 #       6. Parameters may be written to a separate file
 #           $ cat parameters.txt
-#           hosts.txt "httpd -v" "webhost"
+#           hosts.txt "cat /etc/yum.conf|grep exclude" "webhost"
 #           hosts.txt "uptime" "foobar"
 #
 #       7. Read parameters from a separate file
