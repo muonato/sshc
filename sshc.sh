@@ -1,5 +1,5 @@
 #!/bin/bash
-# muonato/sshc @ GitHub 05-MAR-2024
+# muonato/sshc @ GitHub 02-APR-2024
 #
 # Simple helper to send commandline to host(s) over ssh,
 # assuming your public SSH key in authorized_keys file.
@@ -74,7 +74,7 @@ if [[ -f "$HOSTS" ]]; then
                                 GROUP=""
                         fi
                 fi
-                if [[ $GROUP && $ENTRY ]]; then
+                if [[ -z $LABEL && $ENTRY || $GROUP && $ENTRY ]]; then
                         if [[ $COMND == "check" ]]; then
                                 echo -e "\033[1;36m$ENTRY\033[0m"
                         else
