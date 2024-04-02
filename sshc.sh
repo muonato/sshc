@@ -84,8 +84,7 @@ if [[ -f "$HOSTS" ]]; then
                 fi
         done < $HOSTS
 else
-    EMPTY=$(echo $HOSTS|grep -v '^#')
-    if [[ -n $EMPTY ]]; then
+    if [[ -n $COMND ]]; then
         echo "" | ssh $HOSTS $COMND;
     fi
 fi
