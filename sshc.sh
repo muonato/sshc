@@ -1,8 +1,8 @@
 #!/bin/bash
-# muonato/sshc @ GitHub 02-APR-2024
+# muonato/sshc @ GitHub 08-APR-2024
 #
 # Simple helper to send commandline to host(s) over ssh,
-# assuming your public SSH key is in authorized_keys file.
+# assumes login with ssh-agent (or without password).
 # Hosts may be grouped with labels in brackets and listed
 # one-per-row in a hostsfile. Comment rows # are ignored.
 #
@@ -30,18 +30,18 @@
 #       2. Check uptime of a specific host
 #           $ ./sshc.sh myhost.mydomain.net "uptime"
 #
-#       3. Check failed systemd services for all listed in hostfile
-#           $ ./sshc.sh hosts.txt "sudo systemctl --failed"
-#
-#       4. List hosts in the hostsfile group 'webhost'
+#       3. List hosts in the hostsfile group 'webhost'
 #           $ ./sshc.sh hosts.txt "check" "webhost"
 #
-#       5. Show version of Apache in Docker container for group 'webhost'
-#           $ ./sshc.sh hosts.txt "sudo docker exec my-container httpd -v" "webhost"
+#       4. Show version of Apache in hostfile group 'webhost'
+#           $ ./sshc.sh hosts.txt "httpd -v" webhost
+#
+#       5. Show version of Apache in Docker container
+#           $ ./sshc.sh hosts.txt "sudo docker exec my-container httpd -v"
 #
 #       6. Parameters may be written to a separate file
 #           $ cat parameters.txt
-#           hosts.txt "cat /etc/yum.conf|grep exclude" "webhost"
+#           hosts.txt "httpd -v" "webhost"
 #           hosts.txt "uptime" "foobar"
 #
 #       7. Read parameters from a separate file
@@ -49,15 +49,15 @@
 #
 
 # Args
-HOSTS=$1
+HOSTS=${1?"ERROR: missing parameters"}
 COMND=$2
 LABEL=$3
 
 if [[ -f "$HOSTS" ]]; then
         while read ENTRY; do
-                # remove CRLF
-                ENTRY=$(echo $ENTRY|tr -d "\r")
-                
+        # remove CRLF
+        ENTRY=$(echo $ENTRY|tr -d "\r")
+
                 # skip comment rows
                 ENTRY=$(echo $ENTRY|grep -v '^#')
 
@@ -83,11 +83,9 @@ if [[ -f "$HOSTS" ]]; then
                         fi
                 fi
         done < $HOSTS
-fi
-
-if [[ -z $HOSTS || -z $COMND ]]; then
-    head -n 50 $0
-    echo "ERROR: missing parameters"
 else
-    echo "" | ssh $HOSTS $COMND;
+    EMPTY=$(echo $HOSTS|grep -v '^#')
+    if [[ -n $EMPTY ]]; then
+        echo "" | ssh $HOSTS $COMND;
+    fi
 fi
